@@ -18,7 +18,6 @@ def updateSLD():
 
 def sendCurrentFreq():
     SG.setWave(UI.CMB.currentIndex())
-    SG.setWave(UI.CMB.currentIndex())
     freq = UI.SLD.value()
     SG.setFreq(freq)
     SG.send()
@@ -29,8 +28,8 @@ def state():
         SG.stateOff()
         UI.BTNS.setText("RUN")
     else:
-        SG.stateOn()
         SG.setFreq(UI.SLD.value())
+        SG.stateOn()
         UI.BTNS.setText("STOP")
 
 

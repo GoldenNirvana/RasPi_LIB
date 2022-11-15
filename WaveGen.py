@@ -9,7 +9,7 @@ class WaveGen(object):
         self.__freq = freq
         self.__clockFreq = 25000000
         self.__isWorked = False
-        #self.__spi = spi
+        self.__spi = spi
         self.__prevFrom = waveforms[0]
 
     @staticmethod
