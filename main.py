@@ -33,11 +33,16 @@ def state():
         UI.BTNS.setText("STOP")
 
 
+def comboBoxChange():
+    sendCurrentFreq()
+
+
 def main():
     UI.CMB.addItems(WAVE_LIST)
     UI.SLD.valueChanged.connect(updateSLD)
     UI.BTNF.clicked.connect(sendCurrentFreq)
     UI.BTNS.clicked.connect(state)
+    UI.CMB.currentIndexChanged.connect(comboBoxChange)
     UI.show()
     APP.exec()
 
