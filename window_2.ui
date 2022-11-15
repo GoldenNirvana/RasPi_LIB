@@ -103,7 +103,7 @@
       <item>
        <widget class="QPushButton" name="BTNS">
         <property name="text">
-         <string>SEND SLEEP</string>
+         <string>RUN</string>
         </property>
        </widget>
       </item>

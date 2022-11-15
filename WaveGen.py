@@ -8,7 +8,7 @@ class WaveGen(object):
         self.__waveForm = waveforms[0]
         self.__freq = freq
         self.__clockFreq = 25000000
-        self.__isWorked = True
+        self.__isWorked = False
         self.__ss = ss
 
     @staticmethod
@@ -19,21 +19,23 @@ class WaveGen(object):
         high, low = self.__getBytes(data)
         print(bin(high))
         print(bin(low))
-        # self.ss.low()
-        # self.spi.send(high)
-        # self.spi.send(low)
-        # self.ss.high()
+
 
     def setFreq(self, freq):
         self.__freq = freq
 
+    def stateOn(self):
+        self.__waveForm = 0x2000
+        self.__isWorked = True
+        self.send()
+
     def setWave(self, formIndex):
-        self.__isWorked = True  # FIXME
         self.__waveForm = waveforms[formIndex]
 
     def stateOff(self):
+        self.__waveForm = 0x2040
         self.__isWorked = False
-        self.__waveForm = 0x2040  # FIXME
+        self.send()
 
     def getForm(self):
         return WAVE_LIST[waveforms.index(self.__waveForm)]
