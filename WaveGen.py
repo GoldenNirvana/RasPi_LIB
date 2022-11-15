@@ -3,13 +3,13 @@ waveforms = [0x2000, 0x2020, 0x2002]
 
 
 class WaveGen(object):
-    def __init__(self, channel, freq):
+    def __init__(self, channel, freq, spi):
         self.__channel = channel
         self.__waveForm = waveforms[0]
         self.__freq = freq
         self.__clockFreq = 25000000
         self.__isWorked = False
-        #self.__spi = spi
+        self.__spi = spi
         self.__prevFrom = waveforms[0]
 
     @staticmethod
@@ -20,7 +20,7 @@ class WaveGen(object):
         high, low = self.__getBytes(data)
         print(bin(high))
         print(bin(low))
-        # self.__spi.xfer([high, low])
+        self.__spi.xfer([high, low])
 
     def setFreq(self, freq):
         self.__freq = freq
