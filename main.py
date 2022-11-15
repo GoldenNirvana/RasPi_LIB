@@ -4,8 +4,10 @@ import spidev
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("window_2.ui")
-
-SG = WaveGen(1, 1000)
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 10000
+SG = WaveGen(1, 1000, spi)
 
 
 def updateSLD():
@@ -15,8 +17,7 @@ def updateSLD():
 
 
 def sendCurrentFreq():
-    n = UI.CMB.currentIndex()
-    SG.setWave(n)
+    SG.setWave(UI.CMB.currentIndex())
     freq = UI.SLD.value()
     SG.setFreq(freq)
     SG.send()
