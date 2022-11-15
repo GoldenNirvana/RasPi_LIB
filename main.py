@@ -1,10 +1,12 @@
 from WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
-import spidev
+#import spidev
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("window_2.ui")
-
+#spi = spidev.SpiDev()
+#spi.open(0, 0)
+#spi.max_speed_hz = 10000
 SG = WaveGen(1, 1000)
 
 
@@ -15,8 +17,7 @@ def updateSLD():
 
 
 def sendCurrentFreq():
-    n = UI.CMB.currentIndex()
-    SG.setWave(n)
+    SG.setWave(UI.CMB.currentIndex())
     freq = UI.SLD.value()
     SG.setFreq(freq)
     SG.send()
@@ -28,6 +29,7 @@ def state():
         UI.BTNS.setText("RUN")
     else:
         SG.stateOn()
+        SG.setFreq(UI.SLD.value())
         UI.BTNS.setText("STOP")
 
 
