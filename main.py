@@ -1,13 +1,12 @@
 from WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
-import spidev
+from ABC import Abc, CHN_AIN1
+
+import threading
+import time
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("window_2.ui")
-spi = spidev.SpiDev()
-spi.open(0, 0)
-spi.max_speed_hz = 10000
-SG = WaveGen(1, 1000, spi)
 
 
 def updateSLD():
@@ -37,15 +36,38 @@ def comboBoxChange():
     sendCurrentFreq()
 
 
+def foo(x):
+    while True:
+        print(x.readADResultRaw(CHN_AIN1))
+        time.sleep (0.5)
+
 def main():
-    UI.CMB.addItems(WAVE_LIST)
-    UI.SLD.valueChanged.connect(updateSLD)
-    UI.BTNF.clicked.connect(sendCurrentFreq)
-    UI.BTNS.clicked.connect(state)
-    UI.CMB.currentIndexChanged.connect(comboBoxChange)
-    UI.show()
-    APP.exec()
+    abc = Abc(0, 1)     # bus, ss
+    SG = WaveGen(0, 0, 0)  # freq, bus, ss  # FIXME 
+    abc.initChannel(CHN_AIN1)
+    
+    a = 2
+    if a == 1:
+        UI.CMB.addItems(WAVE_LIST)
+        UI.SLD.valueChanged.connect(updateSLD)
+        UI.BTNF.clicked.connect(sendCurrentFreq)
+        UI.BTNS.clicked.connect(state)
+        UI.CMB.currentIndexChanged.connect(comboBoxChange)
+        UI.show()
+        threading.Thread(target=foo).start()
+        APP.exec()
+    elif a == 2:
+        threading.Thread(target=foo, args=[abc]).start()
+        time.sleep(3)
+        SG.stateOn()
+        time.sleep(3)
+        SG.stateOff()
+        #spi.open(0, 0)
+        #SG.stateOff()
+    
+        
+    
 
-
+    
 if __name__ == '__main__':
     main()
