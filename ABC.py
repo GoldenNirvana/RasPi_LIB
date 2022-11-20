@@ -158,9 +158,9 @@ def main():
     import time
     ad7705 = AD770X()
     ad7705.initChannel(CHN_AIN1)
-    while True :
+    while True:
         print(ad7705.readADResultRaw(CHN_AIN1))
-        time.sleep (0.5)
+        time.sleep(0.5)
 
 
 if __name__ == '__main__':
