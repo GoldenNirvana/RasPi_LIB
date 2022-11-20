@@ -1,12 +1,12 @@
-from WaveGen import WaveGen, WAVE_LIST
+from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
-from ABC import Abc, CHN_AIN1
+from Components.ABC import Abc, CHN_AIN1
 
 import threading
 import time
 
 APP = QtWidgets.QApplication([])
-UI = uic.loadUi("window_2.ui")
+UI = uic.loadUi("Interface/window_2.ui")
 
 
 def updateSLD():
