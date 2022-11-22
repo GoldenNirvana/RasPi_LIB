@@ -90,7 +90,7 @@ class Adc():
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
         self.spi.bits_per_word = BITS
-        self.reset()
+        #zself.reset()
 
     def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
         self.setNextOperation(REG_CLOCK, channel, 0)
@@ -146,9 +146,8 @@ class Adc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0])[0]
-        return (b1 & 0x80) == 0x0
+        b1 = self.spi.xfer([0x0x0
 
-    def reset(self) :
-        for i in range(100) :
+    def reset(self):
+        for i in range(100):
             self.spi.xfer([0xff])

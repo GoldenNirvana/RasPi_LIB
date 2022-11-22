@@ -12,7 +12,7 @@ import time
 # Узел - минус
 
 SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME
-SG2 = WaveGen(10000, 0, 1)
+#SG2 = WaveGen(10000, 1, 1)
 
 
 APP = QtWidgets.QApplication([])
@@ -49,10 +49,10 @@ def printResults(x):
 
 
 def main():
-    #adc = Adc(0, 1)     # bus, ss
-    #abc.initChannel(CHN_AIN1)
+    #adc = Adc(1, 0)     # bus, ss
+    #adc.initChannel(CHN_AIN1)
     print("helol")
-    testCase = 3
+    testCase = 4
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -60,7 +60,7 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        #threading.Thread(target=printResults, args=[adc]).start()
+        threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
         threading.Thread(target=printResults, args=[adc]).start()
@@ -72,14 +72,16 @@ def main():
         c = 10000
         SG.stateOn(c)
         SG.setWave(0)
-        SG2.stateOn(c)
+        #SG2.stateOn(c)
         while c < 100000:
             time.sleep(0.2)
             SG.send(c)
-            SG2.send(c)
+            #SG2.send(c)
             c += 1000
             if c > 90000:
                 c -= 80000
+    elif testCase == 4:
+        adc = Adc(1, 0)
     
     
 if __name__ == '__main__':
