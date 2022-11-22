@@ -78,7 +78,7 @@ CLK_DIV_2 = 0x2
 
 MODE = 0b11 #SPI_CPHA | SPI_CPOL
 BITS = 8
-SPEED = 50000
+SPEED = 100000
 DELAY = 10
 
 import spidev

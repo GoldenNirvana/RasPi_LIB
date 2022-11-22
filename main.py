@@ -4,22 +4,23 @@ from Components.ABC import Abc, CHN_AIN1
 import threading
 import time
 
-SG = WaveGen(0, 0, 0)  # freq, bus, ss  # FIXME 
+# Узел - минус
+
+SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
 
 def updateSLD():
     UI.LCD.display(UI.SLD.value())
-    if SG.getState():
-        sendCurrentFreq()
+    sendCurrentFreq()
+        
         
         
 def sendCurrentFreq():
-    SG.setWave(UI.CMB.currentIndex())
-    freq = UI.SLD.value()
-    SG.setFreq(freq)
-    SG.send()
-    print(freq)
+    if SG.getState():
+        SG.setWave(UI.CMB.currentIndex())
+        SG.send(UI.SLD.value())
+        print(UI.SLD.value())
 
 
 def state():
@@ -27,8 +28,7 @@ def state():
         SG.stateOff()
         UI.BTNS.setText("RUN")
     else:
-        SG.setFreq(UI.SLD.value())
-        SG.stateOn()
+        SG.stateOn(UI.SLD.value())
         UI.BTNS.setText("STOP")
 
 
@@ -36,18 +36,17 @@ def comboBoxChange():
     sendCurrentFreq()
 
 
-def foo(x):
+def printResults(x):
     while True:
         print(x.readADResultRaw(CHN_AIN1))
-        time.sleep (0.5)
+        time.sleep(0.5)
 
 
 def main():
-    abc = Abc(0, 1)     # bus, ss
-
-    abc.initChannel(CHN_AIN1)
-    
-    testCase = 2
+    #abc = Abc(0, 1)     # bus, ss
+    #abc.initChannel(CHN_AIN1)
+    print("helol")
+    testCase = 3
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -55,16 +54,23 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        threading.Thread(target=foo, args=[abc]).start()
+        #threading.Thread(target=printResults, args=[abc]).start()
         APP.exec()
     elif testCase == 2:
-        threading.Thread(target=foo, args=[abc]).start()
+        threading.Thread(target=printResults, args=[abc]).start()
         time.sleep(3)
         SG.stateOn()
         time.sleep(3)
         SG.stateOff()
-        #spi.open(0, 0)
-        #SG.stateOff()
+    elif testCase == 3:
+        c = 10000
+        SG.stateOn(c)
+        while c < 100000:
+            time.sleep(0.05)
+            SG.send(c)
+            c += 1000
+            if c > 90000:
+                c -= 80000
     
     
 if __name__ == '__main__':
