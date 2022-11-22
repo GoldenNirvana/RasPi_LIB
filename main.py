@@ -64,9 +64,6 @@ def main():
         SG.stateOff()
         #spi.open(0, 0)
         #SG.stateOff()
-    
-        
-    
 
     
 if __name__ == '__main__':
