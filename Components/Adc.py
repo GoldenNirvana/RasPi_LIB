@@ -24,7 +24,7 @@
 #adapted form arduino library :
 #https://github.com/kerrydwong/AD770X
 
-import spidev
+
 
 REG_CMM = 0x0 #communication register 8 bit
 REG_SETUP = 0x1 #setup register 8 bit
@@ -78,25 +78,25 @@ CLK_DIV_2 = 0x2
 
 MODE = 0b11 #SPI_CPHA | SPI_CPOL
 BITS = 8
-SPEED = 50000
+SPEED = 100000
 DELAY = 10
 
-class Abc():
-    def __init__(self,bus=0,device=0) :
+import spidev
+
+class Adc():
+    def __init__(self,bus,device) :
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
         self.spi.bits_per_word = BITS
-        self.reset()
+        #zself.reset()
 
     def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
-
         self.setNextOperation(REG_SETUP, channel, 0)
         self.writeSetupRegister(MODE_SELF_CAL, gain, polarity, 0, 0)
-
         while not self.dataReady(channel) :
             pass
 
@@ -146,14 +146,8 @@ class Abc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0])[0]
-        return (b1 & 0x80) == 0x0
+        b1 = self.spi.xfer([0x0x0
 
-    def reset(self) :
-        for i in range(100) :
+    def reset(self):
+        for i in range(100):
             self.spi.xfer([0xff])
-        
-
-    
-    
-        
