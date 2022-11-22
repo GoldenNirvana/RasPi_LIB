@@ -8,7 +8,6 @@ SG = WaveGen(0, 0, 0)  # freq, bus, ss  # FIXME
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
 
-
 def updateSLD():
     UI.LCD.display(UI.SLD.value())
     if SG.getState():
@@ -29,7 +28,6 @@ def state():
         UI.BTNS.setText("RUN")
     else:
         SG.setFreq(UI.SLD.value())
-        SG.setFreq(50000)
         SG.stateOn()
         UI.BTNS.setText("STOP")
 
@@ -49,17 +47,17 @@ def main():
 
     abc.initChannel(CHN_AIN1)
     
-    a = 1
-    if a == 1:
+    testCase = 2
+    if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
         UI.BTNF.clicked.connect(sendCurrentFreq)
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        #threading.Thread(target=foo, args=[abc]).start()
+        threading.Thread(target=foo, args=[abc]).start()
         APP.exec()
-    elif a == 2:
+    elif testCase == 2:
         threading.Thread(target=foo, args=[abc]).start()
         time.sleep(3)
         SG.stateOn()
