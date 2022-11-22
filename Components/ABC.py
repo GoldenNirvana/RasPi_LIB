@@ -81,15 +81,9 @@ BITS = 8
 SPEED = 50000
 DELAY = 10
 
-<<<<<<< HEAD:ABC.py
-class AD770X():
-    def __init__(self,spi, bus=0,device=0) :
-        self.spi = spi
-=======
 class Abc():
     def __init__(self,bus=0,device=0) :
         self.spi = spidev.SpiDev()
->>>>>>> 3487c808ea7781cab3977a541984eb683ce25678:Components/ABC.py
         self.spi.open(bus, device)
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
@@ -158,11 +152,3 @@ class Abc():
     def reset(self) :
         for i in range(100) :
             self.spi.xfer([0xff])
-<<<<<<< HEAD:ABC.py
-=======
-        
-
-    
-    
-        
->>>>>>> 3487c808ea7781cab3977a541984eb683ce25678:Components/ABC.py
