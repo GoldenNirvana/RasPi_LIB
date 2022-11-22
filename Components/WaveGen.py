@@ -1,8 +1,10 @@
 WAVE_LIST = ['SIN', 'SQU', 'TRI']
 waveforms = [0x2000, 0x2020, 0x2002]
 
+import spidev
 
 class WaveGen(object):
+<<<<<<< HEAD:WaveGen.py
     def __init__(self, channel, freq, spi):
         self.__channel = channel
         self.__waveForm = 0x2000
@@ -11,6 +13,19 @@ class WaveGen(object):
         self.__isWorked = False
         self.__spi = spi
         self.__prevFrom = 0x2000
+=======
+    def __init__(self, freq, bus, ss):
+        self.__waveForm = 0x2040
+        self.__freq = freq
+        self.__clockFreq = 25000000
+        self.__isWorked = False
+        self.__spi = spidev.SpiDev()
+        self.__spi.open(bus, ss)
+        self.__spi.max_speed_hz = 10000
+        self.__prevFrom = waveforms[0]
+        self.send()
+        
+>>>>>>> 3487c808ea7781cab3977a541984eb683ce25678:Components/WaveGen.py
 
     @staticmethod
     def __getBytes(integer):
@@ -30,6 +45,9 @@ class WaveGen(object):
         self.__waveForm = self.__prevFrom
         self.__isWorked = True
         self.send()
+        
+    def closeSpi(self):
+        self.__spi.close()
 
     def setWave(self, formIndex):
         self.__waveForm = waveforms[formIndex]
@@ -62,3 +80,4 @@ class WaveGen(object):
         self.__send(LSB)  # lower 14 bits
         self.__send(MSB)  # Upper 14 bits
         self.__send(self.__waveForm)
+
