@@ -146,7 +146,7 @@ class Adc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0x0
+        b1 = self.spi.xfer([0x0])
 
     def reset(self):
         for i in range(100):

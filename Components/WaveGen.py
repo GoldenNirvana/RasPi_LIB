@@ -12,7 +12,7 @@ class WaveGen(object):
         self.__spi = spidev.SpiDev()
         self.__spi.open(bus, ss)
         self.__spi.max_speed_hz = 100000
-        self.__prevFrom = waveforms[1]
+        self.__prevFrom = waveforms[0]
         self.__send(0x0100) # 0x2100
 
 
@@ -23,7 +23,6 @@ class WaveGen(object):
     def __send(self, data):
         high, low = self.__getBytes(data)
         self.__spi.xfer([high, low])
-
 
     def setFreq(self, freq):
         self.__freq = freq

@@ -6,14 +6,9 @@ import time
 
 # SG переделать на локальную
 # AD5200
-# fix
-
-
 # Узел - минус
 
 SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME
-#SG2 = WaveGen(10000, 1, 1)
-
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
@@ -51,8 +46,8 @@ def printResults(x):
 def main():
     #adc = Adc(1, 0)     # bus, ss
     #adc.initChannel(CHN_AIN1)
-    print("helol")
-    testCase = 4
+    print("Start program...")
+    testCase = 1
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -60,10 +55,10 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        threading.Thread(target=printResults, args=[adc]).start()
+        #threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
-        threading.Thread(target=printResults, args=[adc]).start()
+        #threading.Thread(target=printResults, args=[adc]).start()
         time.sleep(3)
         SG.stateOn()
         time.sleep(3)
@@ -80,8 +75,6 @@ def main():
             c += 1000
             if c > 90000:
                 c -= 80000
-    elif testCase == 4:
-        adc = Adc(1, 0)
 
 
 if __name__ == '__main__':
