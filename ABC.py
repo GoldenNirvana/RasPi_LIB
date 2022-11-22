@@ -24,7 +24,7 @@
 #adapted form arduino library :
 #https://github.com/kerrydwong/AD770X
 
-import spidev
+
 
 REG_CMM = 0x0 #communication register 8 bit
 REG_SETUP = 0x1 #setup register 8 bit
@@ -82,8 +82,8 @@ SPEED = 50000
 DELAY = 10
 
 class AD770X():
-    def __init__(self,bus=0,device=0) :
-        self.spi = spidev.SpiDev()
+    def __init__(self,spi, bus=0,device=0) :
+        self.spi = spi
         self.spi.open(bus, device)
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
@@ -152,17 +152,3 @@ class AD770X():
     def reset(self) :
         for i in range(100) :
             self.spi.xfer([0xff])
-
-
-def main():
-    import time
-    ad7705 = AD770X()
-    ad7705.initChannel(CHN_AIN1)
-    while True :
-        print(ad7705.readADResultRaw(CHN_AIN1))
-        time.sleep (0.5)
-
-
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))
