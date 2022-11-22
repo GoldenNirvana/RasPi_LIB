@@ -14,14 +14,13 @@ def updateSLD():
     if SG.getState():
         sendCurrentFreq()
         
-
-
+        
 def sendCurrentFreq():
     SG.setWave(UI.CMB.currentIndex())
     freq = UI.SLD.value()
     SG.setFreq(freq)
     SG.send()
-    print("There")
+    print(freq)
 
 
 def state():
@@ -58,7 +57,7 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        threading.Thread(target=foo, args=[abc]).start()
+        #threading.Thread(target=foo, args=[abc]).start()
         APP.exec()
     elif a == 2:
         threading.Thread(target=foo, args=[abc]).start()

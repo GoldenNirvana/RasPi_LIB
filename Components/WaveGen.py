@@ -28,7 +28,7 @@ class WaveGen(object):
 
 
     def setFreq(self, freq):
-        self.__freq = 1000
+        self.__freq = freq
 
     def stateOn(self):
         self.__waveForm = self.__prevFrom
