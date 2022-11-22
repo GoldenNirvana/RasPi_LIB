@@ -81,6 +81,8 @@ BITS = 8
 SPEED = 50000
 DELAY = 10
 
+import spidev
+
 class Abc():
     def __init__(self,bus=0,device=0) :
         self.spi = spidev.SpiDev()
