@@ -4,6 +4,7 @@ from Components.ABC import Abc, CHN_AIN1
 import threading
 import time
 
+SG = WaveGen(0, 0, 0)  # freq, bus, ss  # FIXME 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
 
@@ -46,10 +47,10 @@ def foo(x):
 
 def main():
     abc = Abc(0, 1)     # bus, ss
-    SG = WaveGen(0, 0, 0)  # freq, bus, ss  # FIXME 
+
     abc.initChannel(CHN_AIN1)
     
-    a = 2
+    a = 1
     if a == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -57,7 +58,7 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        threading.Thread(target=foo).start()
+        threading.Thread(target=foo, args=[abc]).start()
         APP.exec()
     elif a == 2:
         threading.Thread(target=foo, args=[abc]).start()
