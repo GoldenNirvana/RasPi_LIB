@@ -12,6 +12,7 @@ def updateSLD():
     UI.LCD.display(UI.SLD.value())
     if SG.getState():
         sendCurrentFreq()
+        
 
 
 def sendCurrentFreq():
