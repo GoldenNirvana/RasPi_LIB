@@ -13,7 +13,7 @@ class WaveGen(object):
         self.__spi.open(bus, ss)
         self.__spi.max_speed_hz = 100000
         self.__prevFrom = waveforms[0]
-        self.__send(0x0100)
+        self.__send(0x0100) # 0x2100
 
 
     @staticmethod

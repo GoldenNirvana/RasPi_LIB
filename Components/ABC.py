@@ -83,8 +83,8 @@ DELAY = 10
 
 import spidev
 
-class Abc():
-    def __init__(self,bus=0,device=0) :
+class Adc():
+    def __init__(self,bus,device) :
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)
         self.spi.max_speed_hz = SPEED
@@ -95,10 +95,8 @@ class Abc():
     def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
-
         self.setNextOperation(REG_SETUP, channel, 0)
         self.writeSetupRegister(MODE_SELF_CAL, gain, polarity, 0, 0)
-
         while not self.dataReady(channel) :
             pass
 

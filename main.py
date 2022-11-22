@@ -43,7 +43,7 @@ def printResults(x):
 
 
 def main():
-    #abc = Abc(0, 1)     # bus, ss
+    #adc = Adc(0, 1)     # bus, ss
     #abc.initChannel(CHN_AIN1)
     print("helol")
     testCase = 3
@@ -54,10 +54,10 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        #threading.Thread(target=printResults, args=[abc]).start()
+        #threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
-        threading.Thread(target=printResults, args=[abc]).start()
+        threading.Thread(target=printResults, args=[adc]).start()
         time.sleep(3)
         SG.stateOn()
         time.sleep(3)
