@@ -3,6 +3,7 @@ waveforms = [0x2000, 0x2020, 0x2002]
 
 import spidev
 
+
 class WaveGen(object):
     def __init__(self, freq, bus, ss):
         self.__waveForm = 0x2040 # FIXME
@@ -13,8 +14,7 @@ class WaveGen(object):
         self.__spi.open(bus, ss)
         self.__spi.max_speed_hz = 100000
         self.__prevFrom = waveforms[0]
-        self.__send(0x0100) # 0x2100
-
+        self.__send(0x0100)  # 0x2100
 
     @staticmethod
     def __getBytes(integer):
