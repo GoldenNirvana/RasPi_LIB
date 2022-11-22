@@ -5,14 +5,14 @@ import spidev
 
 class WaveGen(object):
     def __init__(self, freq, bus, ss):
-        self.__waveForm = 0x2040
+        self.__waveForm = 0x2040 # FIXME
         self.__freq = freq
         self.__clockFreq = 25000000
         self.__isWorked = False
         self.__spi = spidev.SpiDev()
         self.__spi.open(bus, ss)
         self.__spi.max_speed_hz = 100000
-        self.__prevFrom = waveforms[0]
+        self.__prevFrom = waveforms[1]
         self.__send(0x0100) # 0x2100
 
 

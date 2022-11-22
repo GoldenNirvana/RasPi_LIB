@@ -1,26 +1,32 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
-from Components.ABC import Abc, CHN_AIN1
+from Components.Adc import Adc, CHN_AIN1
 import threading
 import time
 
+# SG переделать на локальную
+# AD5200
+# fix
+
+
 # Узел - минус
 
-SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME 
+SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME
+SG2 = WaveGen(10000, 0, 1)
+
+
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
 
 def updateSLD():
     UI.LCD.display(UI.SLD.value())
     sendCurrentFreq()
-        
-        
+
         
 def sendCurrentFreq():
     if SG.getState():
         SG.setWave(UI.CMB.currentIndex())
         SG.send(UI.SLD.value())
-        print(UI.SLD.value())
 
 
 def state():
@@ -65,9 +71,12 @@ def main():
     elif testCase == 3:
         c = 10000
         SG.stateOn(c)
+        SG.setWave(0)
+        SG2.stateOn(c)
         while c < 100000:
-            time.sleep(0.05)
+            time.sleep(0.2)
             SG.send(c)
+            SG2.send(c)
             c += 1000
             if c > 90000:
                 c -= 80000
