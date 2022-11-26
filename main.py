@@ -5,8 +5,6 @@ import threading
 import time
 
 # SG переделать на локальную
-# AD5200
-# Узел - минус
 
 SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME
 

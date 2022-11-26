@@ -5,16 +5,21 @@ import spidev
 
 
 class WaveGen(object):
-    def __init__(self, freq, bus, ss):
+    def __init__(self, freq, bus, port, decoder=None):
+        self.__decoder = decoder
         self.__waveForm = 0x2040 # FIXME
         self.__freq = freq
         self.__clockFreq = 25000000
         self.__isWorked = False
         self.__spi = spidev.SpiDev()
-        self.__spi.open(bus, ss)
+        self.__spi.open(bus, 0)
+        self.__port = port
         self.__spi.max_speed_hz = 100000
         self.__prevFrom = waveforms[0]
         self.__send(0x0100)  # 0x2100
+
+    def setDecoder(self, decoder):
+        self.__decoder = decoder
 
     @staticmethod
     def __getBytes(integer):
@@ -26,7 +31,7 @@ class WaveGen(object):
 
     def setFreq(self, freq):
         self.__freq = freq
-      
+
     @staticmethod
     def __getFreq(self):
         return self.__freq
@@ -36,7 +41,7 @@ class WaveGen(object):
         self.__freq = freq
         self.__isWorked = True
         self.send()
-        
+
     def closeSpi(self):
         self.__spi.close()
 
@@ -56,17 +61,14 @@ class WaveGen(object):
         return self.__isWorked
 
     def send(self, freq=None):
+        self.__decoder.setPort(self.__port)
         if freq is not None:
             self.__freq = freq
         word = hex(int(round((self.__freq * 2 ** 28) / self.__clockFreq)))
-        # Split frequency word onto its seperate bytes
         MSB = (int(word, 16) & 0xFFFC000) >> 14
         LSB = int(word, 16) & 0x3FFF
-        # Set control bits DB15 = 0 and DB14 = 1; for frequency register 0
         MSB |= 0x4000
         LSB |= 0x4000
-        # Set the frequency
-        self.__send(LSB)  # lower 14 bits
-        self.__send(MSB)  # Upper 14 bits
+        self.__send(LSB)
+        self.__send(MSB)
         self.__send(self.__waveForm)
-
