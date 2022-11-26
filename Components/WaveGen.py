@@ -12,7 +12,7 @@ class WaveGen(object):
         self.__clockFreq = 25000000
         self.__isWorked = False
         self.__spi = spidev.SpiDev()
-        self.__spi.open(bus, 0)
+        self.__bus = bus
         self.__port = port
         self.__spi.max_speed_hz = 100000
         self.__prevFrom = waveforms[0]
@@ -26,8 +26,10 @@ class WaveGen(object):
         return divmod(integer, 0x100)
 
     def __send(self, data):
+        self.__spi.open(self.__bus, 0)
         high, low = self.__getBytes(data)
         self.__spi.xfer([high, low])
+        self.__spi.close()
 
     def setFreq(self, freq):
         self.__freq = freq
