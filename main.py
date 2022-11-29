@@ -42,10 +42,11 @@ def printResults(x):
 
 
 def main():
-    #adc = Adc(1, 0)     # bus, ss
+    #adc = Adc(1)
+    # bus, ss
     #adc.initChannel(CHN_AIN1)
     print("Start program...")
-    testCase = 1
+    testCase = 3
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -67,10 +68,10 @@ def main():
         SG.setWave(0)
         #SG2.stateOn(c)
         while c < 100000:
-            time.sleep(0.2)
-            SG.send(c)
+            time.sleep(0.05)
+            SG.send_f(c)
             #SG2.send(c)
-            c += 1000
+            c += 100
             if c > 90000:
                 c -= 80000
 

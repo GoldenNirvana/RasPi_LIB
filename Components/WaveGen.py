@@ -1,7 +1,5 @@
 from Config.Spi import Spi, spi
 
-import gpiozero
-
 
 WAVE_LIST = ['SIN', 'SQU', 'TRI']
 waveforms = [0x2000, 0x2028, 0x2002]
@@ -56,8 +54,6 @@ class WaveGen(object):
         n_reg = int(self.__freq * scale / self.clk_freq)
         n_low = n_reg         & 0x3fff
         n_hi  = (n_reg >> 14) & 0x3fff
-        
-        print(bin(self.__waveForm))
         self.__spi.send16(flag_freq | n_low, self.__port)
         self.__spi.send16(flag_freq | n_hi, self.__port)
         self.__spi.send16(self.__waveForm, self.__port)

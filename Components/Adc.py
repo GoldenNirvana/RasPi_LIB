@@ -1,31 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#  sans titre.py
-#
-#  Copyright 2016 belese <belese@belese-VPCEB3S1E>
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#  MA 02110-1301, USA.
-#
-#
-#adapted form arduino library :
-#https://github.com/kerrydwong/AD770X
-
-
-
 REG_CMM = 0x0 #communication register 8 bit
 REG_SETUP = 0x1 #setup register 8 bit
 REG_CLOCK = 0x2 #clock register 8 bit
@@ -81,16 +53,13 @@ BITS = 8
 SPEED = 100000
 DELAY = 10
 
-import spidev
+from Config.Spi import Spi, spi
 
 class Adc():
-    def __init__(self,bus,device) :
-        self.spi = spidev.SpiDev()
-        self.spi.open(bus, device)
-        self.spi.max_speed_hz = SPEED
-        self.spi.mode = 0b11
-        self.spi.bits_per_word = BITS
-        #zself.reset()
+    def __init__(self,port):
+        self.__spi = spi
+        self.__port = port
+
 
     def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
         self.setNextOperation(REG_CLOCK, channel, 0)
@@ -102,7 +71,7 @@ class Adc():
 
     def setNextOperation(self,reg,channel,readWrite) :
         r = reg << 4 | readWrite << 3 | channel
-        self.spi.xfer([r])
+        self.__spi.send16(r,self.__port)
 
     '''
     Clock Register
@@ -113,9 +82,8 @@ class Adc():
     '''
     def writeClockRegister(self,CLKDIS,CLKDIV,outputUpdateRate) :
         r = CLKDIS << 4 | CLKDIV << 3 | outputUpdateRate
-
         r &= ~(1 << 2); # clear CLK
-        self.spi.xfer([r])
+        self.__spi.send16(r,self.__port)
 
     '''
     Setup Register
@@ -124,21 +92,18 @@ class Adc():
     '''
     def writeSetupRegister(self,operationMode,gain,unipolar,buffered,fsync) :
         r = operationMode << 6 | gain << 3 | unipolar << 2 | buffered << 1 | fsync
-        self.spi.xfer([r])
+        self.__spi.send16(r,self.__port)
 
     def readADResult(self) :
-        b1 = self.spi.xfer([0x0])[0]
-        b2 = self.spi.xfer([0x0])[0]
-
+        b1 = self.__spi.send16(0x0,self.__port)[0]
+        b2 = self.__spi.send16(0x0,self.__port)[0]
         r = int(b1 << 8 | b2)
-
         return r
 
-    def readADResultRaw(self,channel) :
-        while not self.dataReady(channel) :
+    def readADResultRaw(self,channel):
+        while not self.dataReady(channel):
             pass
         self.setNextOperation(REG_DATA, channel, 1)
-
         return self.readADResult()
 
     def readVoltage(self,channel,vref,factor=1) :
@@ -146,8 +111,8 @@ class Adc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0])
+        b1 = self.__spi.send16(0x0,self.__port)
 
     def reset(self):
         for i in range(100):
-            self.spi.xfer([0xff])
+            self.__spi.send16(0xFF,self.__port)
