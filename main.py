@@ -6,7 +6,7 @@ import threading
 import time
 
 
-SG = WaveGen(0)  # portOnDecoder, freq(may be Null)
+SG = WaveGen(0) 
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
@@ -19,7 +19,7 @@ def updateSLD():
 def sendCurrentFreq():
     if SG.getState():
         SG.setWave(UI.CMB.currentIndex())
-        SG.send(UI.SLD.value())
+        SG.send_f(UI.SLD.value())
 
 
 def state():

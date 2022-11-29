@@ -42,7 +42,7 @@ class AD9833:
         self.dataPin.off()
         self.fsyncPin.on()
 
-ad = AD9833(14, 11, 4)  # data, clk, cs
+ad = AD9833(10, 11, 8)  # data, clk, cs
 
 while 1:
     ad.set_freq(15500)
