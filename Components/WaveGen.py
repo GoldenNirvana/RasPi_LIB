@@ -1,18 +1,22 @@
-WAVE_LIST = ['SIN', 'SQU', 'TRI']
-waveforms = [0x2000, 0x2020, 0x2002]
-
+from Components.Decoder import Decoder, SPI_BUS
 import spidev
 
 
+WAVE_LIST = ['SIN', 'SQU', 'TRI']
+waveforms = [0x2000, 0x2020, 0x2002]
+
+
 class WaveGen(object):
-    def __init__(self, freq, bus, port, decoder=None):
-        self.__decoder = decoder
+    def __init__(self, port, freq=None):
+        self.__decoder = SPI_BUS
         self.__waveForm = 0x2040 # FIXME
-        self.__freq = freq
+        if freq is not None:
+            self.__freq = freq
+        else:
+            self.__freq = 1000
         self.__clockFreq = 25000000
         self.__isWorked = False
         self.__spi = spidev.SpiDev()
-        self.__bus = bus
         self.__port = port
         self.__prevFrom = waveforms[0]
         self.__send(0x0100)  # 0x2100
@@ -25,7 +29,7 @@ class WaveGen(object):
         return divmod(integer, 0x100)
 
     def __send(self, data):
-        self.__spi.open(self.__bus, 0)
+        self.__spi.open(0, 0)
         self.__spi.max_speed_hz = 100000
         high, low = self.__getBytes(data)
         self.__spi.xfer([high, low])
@@ -54,8 +58,6 @@ class WaveGen(object):
         self.__waveForm = 0x2040
         self.__isWorked = False
         self.__send(0x2040)
-        if self.__decoder is not None:
-            self.__decoder.disable()
 
     def getForm(self):
         return WAVE_LIST[waveforms.index(self.__waveForm)]

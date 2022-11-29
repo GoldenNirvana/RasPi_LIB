@@ -1,7 +1,7 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
 
-SG = WaveGen(10000, 0, 0)
+SG = WaveGen(0)
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
 
