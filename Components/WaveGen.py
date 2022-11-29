@@ -14,7 +14,6 @@ class WaveGen(object):
         self.__spi = spidev.SpiDev()
         self.__bus = bus
         self.__port = port
-        self.__spi.max_speed_hz = 100000
         self.__prevFrom = waveforms[0]
         self.__send(0x0100)  # 0x2100
 
@@ -27,6 +26,7 @@ class WaveGen(object):
 
     def __send(self, data):
         self.__spi.open(self.__bus, 0)
+        self.__spi.max_speed_hz = 100000
         high, low = self.__getBytes(data)
         self.__spi.xfer([high, low])
         self.__spi.close()
@@ -39,13 +39,12 @@ class WaveGen(object):
         return self.__freq
 
     def stateOn(self, freq):
+        if self.__decoder is not None:
+            self.__decoder.enable(self.__port)
         self.__waveForm = self.__prevFrom
         self.__freq = freq
         self.__isWorked = True
         self.send()
-
-    def closeSpi(self):
-        self.__spi.close()
 
     def setWave(self, formIndex):
         self.__waveForm = waveforms[formIndex]
@@ -55,6 +54,8 @@ class WaveGen(object):
         self.__waveForm = 0x2040
         self.__isWorked = False
         self.__send(0x2040)
+        if self.__decoder is not None:
+            self.__decoder.disable()
 
     def getForm(self):
         return WAVE_LIST[waveforms.index(self.__waveForm)]
@@ -63,7 +64,6 @@ class WaveGen(object):
         return self.__isWorked
 
     def send(self, freq=None):
-        self.__decoder.setPort(self.__port)
         if freq is not None:
             self.__freq = freq
         word = hex(int(round((self.__freq * 2 ** 28) / self.__clockFreq)))

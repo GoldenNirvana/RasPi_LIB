@@ -1,12 +1,14 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
 from Components.Adc import Adc, CHN_AIN1
+from Components.Decoder import Decoder
 import threading
 import time
 
 # SG переделать на локальную
 
-SG = WaveGen(10000, 0, 0)  # freq, bus, ss  # FIXME
+#decoder = Decoder(3, 5, 7)        # a, b, c, g1, g2a, g2b
+SG = WaveGen(10000, 0, 0)  # freq, spiBus, ss (0-7), decoder (if you need it)
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")

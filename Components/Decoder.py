@@ -19,13 +19,12 @@ class Decoder(object):
         IO.output(portA, 0)
         IO.output(portB, 0)
         IO.output(portC, 0)
-        IO.output(g1, 0)
-        IO.output(g2a, 0)
-        IO.output(g2b, 0)
 
-    def setPort(self, port):
+
+    def enable(self, port):
         binaryPort = f'{port:03b}'
         IO.output(self.__portA, int(binaryPort[2]))
         IO.output(self.__portB, int(binaryPort[1]))
         IO.output(self.__portC, int(binaryPort[0]))
-        IO.output(self.__g1, 1)
+
+
