@@ -43,7 +43,7 @@ def comboBoxChange():
 
 def printResults(x):
     while True:
-        x.readADResultRaw(CHN_AIN1)
+        print(x.readADResultRaw(CHN_AIN1))
         time.sleep(0.5)
 
 
@@ -51,7 +51,7 @@ def main():
     adc = Adc(1)
     adc.initChannel(CHN_AIN1)
     print("Start program...")
-    testCase = 1
+    testCase = 2
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
@@ -62,11 +62,7 @@ def main():
         threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
-        #threading.Thread(target=printResults, args=[adc]).start()
-        time.sleep(3)
-        SG.stateOn()
-        time.sleep(3)
-        SG.stateOff()
+        threading.Thread(target=printResults, args=[adc]).start()
     elif testCase == 3:
         c = 10000
         threading.Thread(target=printResults, args=[adc]).start()

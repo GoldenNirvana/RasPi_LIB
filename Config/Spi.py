@@ -62,7 +62,6 @@ class Spi(object):
                 word = ''
         self.dataPin.off()
         self.fsyncPin.on()
-        print(values)
         return values
     
     
@@ -83,7 +82,6 @@ class Spi(object):
                 values[0] = int(word, 2)
         self.dataPin.off()
         self.fsyncPin.on()
-        print(values)
         return values
 
 

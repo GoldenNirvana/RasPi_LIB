@@ -114,7 +114,6 @@ class Adc():
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
         b1 = self.__spi.send8(0x0,self.__port)[0]
-        print(b1)
         return (b1 & 0x80) == 0x0
 
     def reset(self):
