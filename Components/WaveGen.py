@@ -15,8 +15,8 @@ class WaveGen(object):
             self.__freq = 1000
         self.__isWorked = False
         self.__port = port
-        self.__prevFrom = waveforms[0]
         self.clk_freq = 25.0e6
+        self.__spi.send16(0x2040, port)
 
     @staticmethod
     def __getBytes(integer):
@@ -26,7 +26,6 @@ class WaveGen(object):
         self.__freq = freq
 
     def stateOn(self, freq):
-        self.__waveForm = self.__prevFrom
         self.__isWorked = True
         self.send_f(freq)
 
@@ -34,8 +33,6 @@ class WaveGen(object):
         self.__waveForm = waveforms[formIndex]
 
     def stateOff(self):
-        self.__prevFrom = self.__waveForm
-        self.__waveForm = 0x2040
         self.__isWorked = False
         self.__spi.send16(0x2040, self.__port)
 

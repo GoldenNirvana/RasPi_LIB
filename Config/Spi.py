@@ -1,5 +1,6 @@
 import RPi.GPIO as IO
 import gpiozero
+import time
 
 
 class Decoder(object):
@@ -23,7 +24,7 @@ class Decoder(object):
         IO.output(self.__portC, int(binaryPort[0]))
         
 
-decoder = Decoder(36, 38, 40)
+decoder = Decoder(15, 16, 18)
 
 
 class Spi(object):
@@ -44,6 +45,7 @@ class Spi(object):
         decoder.enable(cs)
         word = ''
         self.fsyncPin.off()
+        values = [0x0,0x0]
         mask = 1 << 15
         for i in range(0, 16):
             self.dataPin.value = bool(n & mask)
@@ -52,9 +54,37 @@ class Spi(object):
             bit = IO.input(self.miso)
             word = word + str(bit)
             mask = mask >> 1
+            if i == 7:
+                values[0] = int(word, 2)
+                word = ''
+            if i == 15:
+                values[1] = int(word, 2)
+                word = ''
         self.dataPin.off()
         self.fsyncPin.on()
-        return int(word)
+        print(values)
+        return values
+    
+    
+    def send8(self, n, cs):
+        decoder.enable(cs)
+        word = ''
+        self.fsyncPin.off()
+        values = [0x0]
+        mask = 1 << 7
+        for i in range(0, 8):
+            self.dataPin.value = bool(n & mask)
+            self.clkPin.off()
+            self.clkPin.on()
+            bit = IO.input(self.miso)
+            word = word + str(bit)
+            mask = mask >> 1
+            if i == 7:
+                values[0] = int(word, 2)
+        self.dataPin.off()
+        self.fsyncPin.on()
+        print(values)
+        return values
 
 
 spi = Spi()

@@ -59,9 +59,10 @@ class Adc():
     def __init__(self,port):
         self.__spi = spi
         self.__port = port
+        #self.reset()
 
 
-    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
+    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_20) :
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
         self.setNextOperation(REG_SETUP, channel, 0)
@@ -71,7 +72,7 @@ class Adc():
 
     def setNextOperation(self,reg,channel,readWrite) :
         r = reg << 4 | readWrite << 3 | channel
-        self.__spi.send16(r,self.__port)
+        self.__spi.send8(r,self.__port)
 
     '''
     Clock Register
@@ -81,9 +82,10 @@ class Adc():
     CLKDIV: clock divider bit
     '''
     def writeClockRegister(self,CLKDIS,CLKDIV,outputUpdateRate) :
+
         r = CLKDIS << 4 | CLKDIV << 3 | outputUpdateRate
         r &= ~(1 << 2); # clear CLK
-        self.__spi.send16(r,self.__port)
+        self.__spi.send8(r,self.__port)
 
     '''
     Setup Register
@@ -92,11 +94,11 @@ class Adc():
     '''
     def writeSetupRegister(self,operationMode,gain,unipolar,buffered,fsync) :
         r = operationMode << 6 | gain << 3 | unipolar << 2 | buffered << 1 | fsync
-        self.__spi.send16(r,self.__port)
+        self.__spi.send8(r,self.__port)
 
     def readADResult(self) :
-        b1 = self.__spi.send16(0x0,self.__port)[0]
-        b2 = self.__spi.send16(0x0,self.__port)[0]
+        b1 = self.__spi.send8(0x0,self.__port)[0]
+        b2 = self.__spi.send8(0x0,self.__port)[0]
         r = int(b1 << 8 | b2)
         return r
 
@@ -111,8 +113,10 @@ class Adc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.__spi.send16(0x0,self.__port)
+        b1 = self.__spi.send8(0x0,self.__port)[0]
+        print(b1)
+        return (b1 & 0x80) == 0x0
 
     def reset(self):
         for i in range(100):
-            self.__spi.send16(0xFF,self.__port)
+            self.__spi.send8(0xFF,self.__port)
