@@ -50,16 +50,16 @@
          </sizepolicy>
         </property>
         <property name="maximum">
-         <number>100000</number>
+         <number>15000</number>
         </property>
         <property name="singleStep">
-         <number>100</number>
+         <number>1</number>
         </property>
         <property name="pageStep">
-         <number>100</number>
+         <number>1</number>
         </property>
         <property name="sliderPosition">
-         <number>10000</number>
+         <number>1000</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
