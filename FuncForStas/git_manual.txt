@@ -1,0 +1,11 @@
+git add .\FuncForStas\foo.py
+git commit -m "graph AFC"
+git push
+
+
+
+git pull
+git checkout
+git remote -v
+git log
+git status
