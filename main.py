@@ -1,4 +1,4 @@
-#from Components.WaveGen import WaveGen, WAVE_LIST
+from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
 from Components.Adc import Adc, CHN_AIN1
 
@@ -6,7 +6,7 @@ import threading
 import time
 
 
-#SG = WaveGen(0)
+SG = WaveGen(0)
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
@@ -50,7 +50,7 @@ def main():
     adc = Adc()    
     adc.initChannel(CHN_AIN1)
     print("Start program...")
-    testCase = 2
+    testCase = 1
     if testCase == 1:
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)

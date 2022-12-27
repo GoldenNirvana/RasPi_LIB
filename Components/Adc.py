@@ -1,3 +1,29 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  sans titre.py
+#  
+#  Copyright 2016 belese <belese@belese-VPCEB3S1E>
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
+#  
+#adapted form arduino library :
+#https://github.com/kerrydwong/AD770X
+
 import spidev
 
 REG_CMM = 0x0 #communication register 8 bit
@@ -50,25 +76,28 @@ BIPOLAR = 0x1
 CLK_DIV_1 = 0x1
 CLK_DIV_2 = 0x2
 
-MODE = 0b11
+MODE = 0b11 #SPI_CPHA | SPI_CPOL
 BITS = 8
-SPEED = 1000000
+SPEED = 50000
 DELAY = 10
 
 class Adc():
-    def __init__(self,bus=0,device=0) :        
+    def __init__(self,bus=0,device=0):        
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)        
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
         self.spi.bits_per_word = BITS        
-        self.reset()
+        #self.reset()
+        print('1')
 
-    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25) :
+    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_500):
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
         self.setNextOperation(REG_SETUP, channel, 0)
-        self.writeSetupRegister(MODE_SELF_CAL, gain, polarity, 0, 0)
+        self.writeSetupRegister(MODE_NORMAL, gain, polarity, 0, 0)
+        print('2')
+
         while not self.dataReady(channel) :
             pass
 
@@ -76,23 +105,38 @@ class Adc():
         r = reg << 4 | readWrite << 3 | channel
         self.spi.xfer([r])
 
+    '''
+    Clock Register
+       7      6       5        4        3        2      1      0
+    ZERO(0) ZERO(0) ZERO(0) CLKDIS(0) CLKDIV(0) CLK(1) FS1(0) FS0(1)
+    CLKDIS: master clock disable bit
+    CLKDIV: clock divider bit
+    '''
     def writeClockRegister(self,CLKDIS,CLKDIV,outputUpdateRate) :
         r = CLKDIS << 4 | CLKDIV << 3 | outputUpdateRate
+
         r &= ~(1 << 2); # clear CLK
         self.spi.xfer([r])
 
+    '''
+    Setup Register
+      7     6     5     4     3      2      1      0
+    MD10) MD0(0) G2(0) G1(0) G0(0) B/U(0) BUF(0) FSYNC(1)
+    '''
     def writeSetupRegister(self,operationMode,gain,unipolar,buffered,fsync) :
         r = operationMode << 6 | gain << 3 | unipolar << 2 | buffered << 1 | fsync
         self.spi.xfer([r])
 
     def readADResult(self) :
-        b1 = self.spi.xfer([0x0])[0]
-        b2 = self.spi.xfer([0x0])[0]
+        b1 = self.spi.xfer([0xff])[0]
+        b2 = self.spi.xfer([0xff])[0]
+
         r = int(b1 << 8 | b2)
+
         return r
 
     def readADResultRaw(self,channel) :
-        while not self.dataReady(channel) :
+        while not self.dataReady(channel):
             pass
         self.setNextOperation(REG_DATA, channel, 1)
         return self.readADResult()
@@ -102,9 +146,10 @@ class Adc():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0])[0]
+        b1 = self.spi.xfer([0xff])[0]
         return (b1 & 0x80) == 0x0
 
     def reset(self) :                        
         for i in range(100) :
-            self.spi.xfer([0xff])        
+            self.spi.xfer([0xff])       
+
