@@ -55,7 +55,7 @@ def main():
     x = data2[:, 0]
     y = data2[:, 1]
     plt.plot(x, y, 'r--')
-    plt.title('Резонанс датчика')
+    plt.title('Резонанс даfffffтчика')
     plt.xlabel('Частота, КГц')
     plt.ylabel('Амплитуда')
     plt.grid(1)
