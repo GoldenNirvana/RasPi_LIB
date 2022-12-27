@@ -16,24 +16,29 @@ class Decoder(object):
         IO.output(portA, 0)
         IO.output(portB, 0)
         IO.output(portC, 0)
+        print('--------------------')
 
     def enable(self, port):
         binaryPort = f'{port:03b}'
+        print(binaryPort)
+        print(self.__portA)
+        print(self.__portB)
+        print(self.__portC)
         IO.output(self.__portA, int(binaryPort[2]))
         IO.output(self.__portB, int(binaryPort[1]))
         IO.output(self.__portC, int(binaryPort[0]))
         
 
-decoder = Decoder(15, 16, 18)
+decoder = Decoder(7, 11, 15)
 
 
 class Spi(object):
     def __init__(self):
         self.dec = decoder
-        self.dataPin = gpiozero.OutputDevice(pin = 10)
-        self.clkPin = gpiozero.OutputDevice(pin = 11)
-        self.fsyncPin = gpiozero.OutputDevice(pin = 8)
-        self.miso = 21
+        self.dataPin = gpiozero.OutputDevice(pin = 26)
+        self.clkPin = gpiozero.OutputDevice(pin = 19)
+        self.fsyncPin = gpiozero.OutputDevice(pin = 6)
+        self.miso = 13
         IO.setup(self.miso, IO.IN)
         self.miso
         self.fsyncPin.on()

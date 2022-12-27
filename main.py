@@ -1,4 +1,4 @@
-from Components.WaveGen import WaveGen, WAVE_LIST
+#from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
 from Components.Adc import Adc, CHN_AIN1
 
@@ -6,7 +6,7 @@ import threading
 import time
 
 
-SG = WaveGen(0)
+#SG = WaveGen(0)
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
@@ -18,15 +18,14 @@ def updateSLD():
         
 def sendCurrentFreq():
     if SG.getState():
+        #print(UI.SLD.value())
         SG.setWave(UI.CMB.currentIndex())
         SG.send_f(UI.SLD.value())
-        #SG1.send_f(UI.SLD.value() + 1000)
 
 
 def state():
     if SG.getState():
         SG.stateOff()
-        #SG1.stateOff()
         print(UI.SLD.value())
         UI.BTNS.setText("RUN")
         print(1)
@@ -48,7 +47,7 @@ def printResults(x):
 
 
 def main():
-    adc = Adc(1)
+    adc = Adc()    
     adc.initChannel(CHN_AIN1)
     print("Start program...")
     testCase = 2

@@ -52,5 +52,8 @@ class WaveGen(object):
         n_low = n_reg         & 0x3fff
         n_hi  = (n_reg >> 14) & 0x3fff
         self.__spi.send16(flag_freq | n_low, self.__port)
+        print(flag_freq | n_low)
         self.__spi.send16(flag_freq | n_hi, self.__port)
+        print(flag_freq | n_hi)
         self.__spi.send16(self.__waveForm, self.__port)
+        print(self.__waveForm)
