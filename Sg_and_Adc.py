@@ -6,11 +6,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 
-sg = WaveGen(0)   # 0 - decoder port
-sg.stateOn(1000)  # 1000 hz
-sg.setWave(0)     # 0 = sin
+sg = WaveGen(0) 
+sg.stateOn(1000)
+sg.setWave(0)
 adc = Adc()
 adc.initChannel(CHN_AIN1)
+
+BEGIN = 5000
+END = 10000
+STEP = 30 
+REP = 10
 
 
 def getResults():
@@ -18,37 +23,24 @@ def getResults():
     
 
 def main():
-    
-    #threading.Thread(target=printResults, args=[adc]).start()
-    #code here...
-    
-    #.send_f(300)   # send to waveGen
-    #x = getResults()
-    
     current_datetime = datetime.now()
     print("Current date & time : ", current_datetime)
     str_current_datetime = str(current_datetime)
     str_current_datetime = str_current_datetime[:-7]
     str_current_datetime = str_current_datetime.replace(':', '-')
-    print(str_current_datetime)
-    # create a file object along with extension
+    #print(str_current_datetime)
     file_name = str_current_datetime + '.txt'
     afc_name = str_current_datetime + '.png'
-    print(file_name)
+    #print(file_name)
 
-    for n in range (5000,10000, 30):
+    for n in range (BEGIN, END, STEP):
         values = []
-        for m in range(0,11):
+        for m in range(0,REP):
             sg.send_f(n)
             values.insert(m, getResults())
         values.sort()
-        #summ += getResults()
-        # get current date and time
-        #print("File created : ", file.name)
-        #file.close()
-        #datafile = open("amplitudes.txt", "a+")
         datafile = open("Logs/"+ file_name, 'a+')
-        datafile.write(str(n) +' ' + str(values[7]) + "\n")
+        datafile.write(str(n) +' ' + str(values[int(REP / 2) + 1]) + "\n")
         datafile.close()
 
     data2 = np.loadtxt("Logs/"+ file_name)
@@ -62,7 +54,6 @@ def main():
     plt.savefig("Logs/"+ afc_name, dpi=100)
     plt.show()
     #plt.draw()
-    # datafile.write('{} {}'.format(int('0xff', 16), int('0xaa', 16)))
 
 
 if __name__ == '__main__':
