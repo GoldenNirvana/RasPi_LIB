@@ -1,5 +1,6 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
+from Components.Pot import Pot
 from Components.Adc import Adc, CHN_AIN1
 
 import threading
@@ -7,6 +8,7 @@ import time
 
 
 SG = WaveGen(0)
+pot = Pot(1)
 
 APP = QtWidgets.QApplication([])
 UI = uic.loadUi("Interface/window_2.ui")
@@ -14,6 +16,13 @@ UI = uic.loadUi("Interface/window_2.ui")
 def updateSLD():
     UI.LCD.display(UI.SLD.value())
     sendCurrentFreq()
+    
+    
+def updateSLDforPot():
+    
+    x = int(UI.SLD.value() * 255 / 15000)
+    UI.LCD.display(x)
+    pot.setGain(x)
 
         
 def sendCurrentFreq():
@@ -49,9 +58,13 @@ def printResults(x):
 def main():
     adc = Adc()    
     adc.initChannel(CHN_AIN1)
-    print("Start program...")
+    # 1 - SG and ADC
+    # 2 - Only ADC
+    # 3 - SplineSG and ADC
+    # 4 - Only Pot
     testCase = 1
     if testCase == 1:
+        print("Start case 1")
         UI.CMB.addItems(WAVE_LIST)
         UI.SLD.valueChanged.connect(updateSLD)
         UI.BTNF.clicked.connect(sendCurrentFreq)
@@ -61,20 +74,25 @@ def main():
         threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
+        print("Start case 2")
         threading.Thread(target=printResults, args=[adc]).start()
     elif testCase == 3:
+        print("Start case 3")
         c = 10000
         threading.Thread(target=printResults, args=[adc]).start()
         SG.stateOn(c)
         SG.setWave(0)
-        #SG2.stateOn(c)
         while c < 100000:
             time.sleep(0.01)
             SG.send_f(c)
-            #SG2.send(c)
             c += 100
             if c > 50000:
                 c -= 49000
+    elif testCase == 4:
+        print("Start case 4")
+        UI.SLD.valueChanged.connect(updateSLDforPot)
+        UI.show()
+        APP.exec()
 
 
 if __name__ == '__main__':
