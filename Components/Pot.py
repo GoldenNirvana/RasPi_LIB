@@ -12,3 +12,7 @@ class Pot:
     def setGain(self, gain):
         self.__gain = gain
         self.__spi.send10(self.__gain, self.__port)
+        
+    
+    def getGain(self):
+        return self.__gain

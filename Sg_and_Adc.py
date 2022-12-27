@@ -12,8 +12,8 @@ sg.setWave(0)
 adc = Adc()
 adc.initChannel(CHN_AIN1)
 
-BEGIN = 5000
-END = 10000
+BEGIN = 6500
+END = 8500
 STEP = 30 
 REP = 10
 
@@ -40,9 +40,11 @@ def main():
             values.insert(m, getResults())
         values.sort()
         datafile = open("Logs/"+ file_name, 'a+')
-        datafile.write(str(n) +' ' + str(values[int(REP / 2) + 1]) + "\n")
+        datafile.write(str(n) +' ' + str(values[int(REP / 2) + 2]) + "\n")
         datafile.close()
-
+        
+    datafile = open("Logs/"+ file_name, 'a+')
+    datafile.write("REP" + str(REP) + "\n" + "STEP" + str(STEP)  + "\n")
     data2 = np.loadtxt("Logs/"+ file_name)
     x = data2[:, 0]
     y = data2[:, 1]
@@ -53,7 +55,8 @@ def main():
     plt.grid(1)
     plt.savefig("Logs/"+ afc_name, dpi=100)
     plt.show()
-    #plt.draw()
+    print("finish")
+    plt.draw()
 
 
 if __name__ == '__main__':

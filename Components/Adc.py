@@ -90,7 +90,7 @@ class Adc():
         self.spi.bits_per_word = BITS        
         #self.reset()
 
-    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_2,updRate=UPDATE_RATE_25):
+    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_25):
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
         self.setNextOperation(REG_SETUP, channel, 0)
