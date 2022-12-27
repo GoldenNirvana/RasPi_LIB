@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-from matplotlib import cm, colors
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from scipy.optimize import curve_fit
 from PyQt5 import QtWidgets, uic
@@ -41,7 +39,7 @@ def main():
     afc_name = str_current_datetime + '.png'
     print(file_name)
 
-    for n in range (3800,4200):
+    for n in range (7200,7900):
         sendCurrentFreq(n)
         # get current date and time
         #print("File created : ", file.name)
@@ -55,7 +53,7 @@ def main():
     x = data2[:, 0]
     y = data2[:, 1]
     plt.plot(x, y, 'r--')
-    plt.title('Резонанс даfffffтчика')
+    plt.title('Резонанс датчика')
     plt.xlabel('Частота, КГц')
     plt.ylabel('Амплитуда')
     plt.grid(1)
