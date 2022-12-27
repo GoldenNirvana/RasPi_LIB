@@ -88,14 +88,14 @@ class AD770X():
         self.spi.max_speed_hz = SPEED
         self.spi.mode = 0b11
         self.spi.bits_per_word = BITS        
-        self.reset()
+        #self.reset()
         print('1')
 
-    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_128,updRate=UPDATE_RATE_25) :
+    def initChannel(self,channel,clkDivider=CLK_DIV_1,polarity=BIPOLAR,gain=GAIN_1,updRate=UPDATE_RATE_500):
         self.setNextOperation(REG_CLOCK, channel, 0)
         self.writeClockRegister(0, clkDivider, updRate)
         self.setNextOperation(REG_SETUP, channel, 0)
-        self.writeSetupRegister(MODE_SELF_CAL, gain, polarity, 0, 0)
+        self.writeSetupRegister(MODE_NORMAL, gain, polarity, 0, 0)
         print('2')
 
         while not self.dataReady(channel) :
@@ -128,18 +128,17 @@ class AD770X():
         self.spi.xfer([r])
 
     def readADResult(self) :
-        b1 = self.spi.xfer([0x0])[0]
-        b2 = self.spi.xfer([0x0])[0]
+        b1 = self.spi.xfer([0xff])[0]
+        b2 = self.spi.xfer([0xff])[0]
 
         r = int(b1 << 8 | b2)
 
         return r
 
     def readADResultRaw(self,channel) :
-        while not self.dataReady(channel) :
+        while not self.dataReady(channel):
             pass
         self.setNextOperation(REG_DATA, channel, 1)
-
         return self.readADResult()
 
     def readVoltage(self,channel,vref,factor=1) :    
@@ -147,7 +146,7 @@ class AD770X():
 
     def dataReady(self,channel) :
         self.setNextOperation(REG_CMM, channel, 1)
-        b1 = self.spi.xfer([0x0])[0]
+        b1 = self.spi.xfer([0xff])[0]
         return (b1 & 0x80) == 0x0
 
     def reset(self) :                        
