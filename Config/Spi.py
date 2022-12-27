@@ -16,14 +16,9 @@ class Decoder(object):
         IO.output(portA, 0)
         IO.output(portB, 0)
         IO.output(portC, 0)
-        print('--------------------')
 
     def enable(self, port):
         binaryPort = f'{port:03b}'
-        print(binaryPort)
-        print(self.__portA)
-        print(self.__portB)
-        print(self.__portC)
         IO.output(self.__portA, int(binaryPort[2]))
         IO.output(self.__portB, int(binaryPort[1]))
         IO.output(self.__portC, int(binaryPort[0]))
@@ -88,6 +83,25 @@ class Spi(object):
         self.dataPin.off()
         self.fsyncPin.on()
         return values
+    
+    def send10(self, n, cs):
+        decoder.enable(cs)
+        self.fsyncPin.off()
+        self.dataPin.off()
+        self.clkPin.on()
+        self.clkPin.off()
+        self.clkPin.on()
+        self.clkPin.off()
+        mask = 1 << 7
+        for i in range(0, 8):
+            self.dataPin.value = bool(n & mask)
+            self.clkPin.on()
+            self.clkPin.off()
+            bit = IO.input(self.miso)
+            mask = mask >> 1
+        self.dataPin.off()
+        self.fsyncPin.on()
+        
 
 
 spi = Spi()
