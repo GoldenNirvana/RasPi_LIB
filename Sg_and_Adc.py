@@ -24,7 +24,7 @@ def main():
     #threading.Thread(target=printResults, args=[adc]).start()
     #code here...
     
-    sg.send_f(15000)   # send to waveGen
+    sg.send_f(300)   # send to waveGen
     x = getResults()
     print(x)
 
