@@ -8,3 +8,4 @@ git pull
 git checkout
 git remote -v
 git log
+git status
