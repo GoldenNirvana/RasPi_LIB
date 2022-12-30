@@ -1,5 +1,5 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
-from Components.Adc import Adc, CHN_AIN1
+from Components.AD7705 import AD7705, CHN_AIN1
 import threading
 import time
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ from datetime import datetime
 sg = WaveGen(0) 
 sg.stateOn(1000)
 sg.setWave(0)
-adc = Adc()
+adc = AD7705()
 adc.initChannel(CHN_AIN1)
 
 BEGIN = 6000

@@ -81,7 +81,7 @@ BITS = 8
 SPEED = 50000
 DELAY = 10
 
-class Adc():
+class AD7705():
     def __init__(self,bus=0,device=0):        
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)        
@@ -150,4 +150,3 @@ class Adc():
     def reset(self) :                        
         for i in range(100) :
             self.spi.xfer([0xff])       
-

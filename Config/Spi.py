@@ -35,7 +35,6 @@ class Spi(object):
         self.fsyncPin = gpiozero.OutputDevice(pin = 6)
         self.miso = 13
         IO.setup(self.miso, IO.IN)
-        self.miso
         self.fsyncPin.on()
         self.clkPin.on()
         self.dataPin.off()

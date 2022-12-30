@@ -1,7 +1,7 @@
 from Components.WaveGen import WaveGen, WAVE_LIST
 from PyQt5 import QtWidgets, uic
 from Components.Pot import Pot
-from Components.Adc import Adc, CHN_AIN1
+from Components.AD7705 import AD7705, CHN_AIN1
 
 import threading
 import time
@@ -56,7 +56,7 @@ def printResults(x):
 
 
 def main():
-    adc = Adc()    
+    adc = AD7705()    
     adc.initChannel(CHN_AIN1)
     # 1 - SG and ADC
     # 2 - Only ADC
