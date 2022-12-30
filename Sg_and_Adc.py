@@ -12,9 +12,9 @@ sg.setWave(0)
 adc = Adc()
 adc.initChannel(CHN_AIN1)
 
-BEGIN = 6500
-END = 8500
-STEP = 30 
+BEGIN = 6000
+END = 8000
+STEP = 20 
 REP = 10
 
 
