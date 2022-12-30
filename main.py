@@ -56,13 +56,13 @@ def printResults(x):
 
 
 def main():
-    adc = AD7705()    
-    adc.initChannel(CHN_AIN1)
+    #adc = AD7705()    
+    #adc.initChannel(CHN_AIN1)
     # 1 - SG and ADC
     # 2 - Only ADC
     # 3 - SplineSG and ADC
     # 4 - Only Pot
-    testCase = 1
+    testCase = 3
     if testCase == 1:
         print("Start case 1")
         UI.CMB.addItems(WAVE_LIST)
@@ -71,7 +71,7 @@ def main():
         UI.BTNS.clicked.connect(state)
         UI.CMB.currentIndexChanged.connect(comboBoxChange)
         UI.show()
-        threading.Thread(target=printResults, args=[adc]).start()
+        #threading.Thread(target=printResults, args=[adc]).start()
         APP.exec()
     elif testCase == 2:
         print("Start case 2")
@@ -79,7 +79,7 @@ def main():
     elif testCase == 3:
         print("Start case 3")
         c = 10000
-        threading.Thread(target=printResults, args=[adc]).start()
+        #threading.Thread(target=printResults, args=[adc]).start()
         SG.stateOn(c)
         SG.setWave(0)
         while c < 100000:
