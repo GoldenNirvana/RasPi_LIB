@@ -1,8 +1,8 @@
-from Config.Spi import spi
+from Config.Spi import progSpi
 
 class Pot:
     def __init__(self, port, gain=None):
-        self.__spi = spi
+        self.__spi = progSpi
         self.__gain = 128
         if gain is not None:
             self.__gain = gain

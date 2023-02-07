@@ -1,5 +1,6 @@
 import RPi.GPIO as IO
 import gpiozero
+import spidev
 import time
 
 
@@ -24,16 +25,16 @@ class Decoder(object):
         IO.output(self.__portC, int(binaryPort[0]))
         
 
-decoder = Decoder(7, 11, 15)
+decoder = Decoder(15, 16, 18)
 
 
 class Spi(object):
     def __init__(self):
         self.dec = decoder
-        self.dataPin = gpiozero.OutputDevice(pin = 26)
-        self.clkPin = gpiozero.OutputDevice(pin = 19)
-        self.fsyncPin = gpiozero.OutputDevice(pin = 6)
-        self.miso = 13
+        self.dataPin = gpiozero.OutputDevice(pin = 19)
+        self.clkPin = gpiozero.OutputDevice(pin = 23)
+        self.fsyncPin = gpiozero.OutputDevice(pin = 24)
+        self.miso = 21
         IO.setup(self.miso, IO.IN)
         self.fsyncPin.on()
         self.clkPin.on()
@@ -100,8 +101,24 @@ class Spi(object):
             mask = mask >> 1
         self.dataPin.off()
         self.fsyncPin.on()
-        
+
+    def get16(self):
+        values = ''
+        self.fsyncPin.off()
+        values += str(IO.input(self.miso))
+        for i in range(1, 128):
+            self.clkPin.off()
+            self.clkPin.on()
+            bit = IO.input(self.miso)
+            values = values + str(bit)
+        self.fsyncPin.on()
+        return values
 
 
-spi = Spi()
 
+
+
+progSpi = Spi()
+appSpi = spidev.SpiDev(0, 0)
+appSpi.mode = 2
+appSpi.max_speed_hz = 10000
